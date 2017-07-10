@@ -7,9 +7,24 @@ This standard if widely adopted will simplify the burden on exchanges and other 
   2. Add events to all deposits, and ensure handling is the same when deposits are sent from contracts, including multi-signature wallet contracts.
   3. Ensure wide adoption by wallets and other exchanges for adding a payment reference into a transaction.
   4. Reduce support ticket burden on exchanges and node providers.
+  5. To enable batch payment of transactions sent via a contract, without causing issues for exchanges which would then currently not easily be able to detect these incoming deposits.
 
-### Input is required to ensure wide adoption
+### Further input is required to ensure wide adoption
 
-  If possible the standard should be expanded to encompass payments and deposits with tokens. In a similar way to the functionality of ENS, a registry contract could allow entities to register their deposit addresses. Any address listed there would then require the end user to add an extra payment reference field in order to send a deposit to that address.
+  If possible the standard should be expanded to encompass payments and deposits with tokens.
 
-### Current proposal
+  In a similar way to the functionality of ENS, a registry contract could allow entities to register their deposit addresses. Wallet applications would ensure that for any address listed in that registry contract the end user would be asked to add an extra payment reference field in order to send a deposit to that address.
+
+### First version
+
+  A first deposit contract is proposed with the following features:
+  1. Deposits are received via the `sendDeposit(uint256 paymentReference) payable` function.
+  1. Only deposits with a valid supplied uint payment reference are accepted, and issue a `DepositReceived` event.
+  2. All other deposits, either calling the function without a valid payment reference or via the fallback function, return the sent ether to the sender, and issue a `BadDepositReceived` event.
+  3. The contract also includes a `claimTokens` function allowing any ERC20 tokens sent to the contract to be retrieved by the owner and manually returned to the sender. It would be preferable to extend the contract to accept deposits of tokens, using for example the ERC223 standard proposed.
+
+  The ideal usage would be for client wallets to offer a paymentReference field and allow a user to input it if the deposit contract is found in a registry.
+
+  A second more basic usage is possible now without relying on wide scale adoption, since most wallets allow user to add a `data` field already to their transactions when sending ether to an address.
+  1. Provide a 'payment reference' for users to copy and paste into the data field. This would be for example: `0x3958fe9e0000000000000000000000000000000000000000000000000000000000340769` , where the `0x3958fe9e` represents the sendDeposit function for the contract, and `340769` is the hex payment reference.
+  2. User sends the amount of ETH they wish to deposit to the deposit address, adding the data.
