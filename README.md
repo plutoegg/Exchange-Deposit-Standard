@@ -1,13 +1,13 @@
 # A standard for deposits to exchanges and merchants
 
-This standard if widely adopted will simplify the burden on exchanges and other entities such as merchants which accept deposits and payments on Ethereum. The mechanism through which this happens is by adding a payment reference field to transactions.
+This standard if widely adopted will simplify the burden on exchanges and other entities such as merchants, who accept large numbers of deposits and payments on Ethereum. The solution being proposed is a deposit contract to be widely used, which requires the addition of a payment reference field to transactions.
 
 ### The main goals of developing this standard are:
   1. Reduce burden of parsing the blockchain for all incoming transactions, and the need to issue different addresses for each customer.
-  2. Add events to all deposits, and ensure handling is the same when deposits are sent from contracts, including multi-signature wallet contracts.
+  2. Ensure events are issued for all deposits, and ensure handling is the same whether deposits are sent from other contracts, including multi-signature wallet contracts, or from regular addresses.
   3. Ensure wide adoption by wallets and other exchanges for adding a payment reference into a transaction.
   4. Reduce support ticket burden on exchanges and node providers.
-  5. To enable batch payment of transactions sent via a contract, without causing issues for exchanges which would then currently not easily be able to detect these incoming deposits.
+  5. To enable batch payments of transactions sent via a contract, without causing issues for exchanges. It is currently not easy be able to detect these incoming deposits from contracts.
 
 ### Further input is required to ensure wide adoption
 
@@ -15,7 +15,7 @@ This standard if widely adopted will simplify the burden on exchanges and other 
 
   In a similar way to the functionality of ENS, a registry contract could allow entities to register their deposit addresses. Wallet applications would ensure that for any address listed in that registry contract the end user would be asked to add an extra payment reference field in order to send a deposit to that address.
 
-### First version
+### Basic deposit contract
 
   A first deposit contract is proposed with the following features:
   1. Deposits are received via the `sendDeposit(uint256 paymentReference) payable` function.
