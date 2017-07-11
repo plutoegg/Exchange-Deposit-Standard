@@ -20,6 +20,7 @@ function DepositSink(address _hotWallet) {
 }
 
 function sendDeposit(uint256 paymentReference) payable {
+  // Check to match whichever payment reference schema is used (default > 0)
   if (paymentReference > 0) {
     DepositReceived(msg.sender, paymentReference, msg.value);
     hotWallet.transfer(msg.value);
