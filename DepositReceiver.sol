@@ -15,7 +15,7 @@ modifier onlyOwner() {
 }
 
 function DepositSink(address _hotWallet) {
-	owner = msg.sender;
+  owner = msg.sender;
   hotWallet = _hotWallet;
 }
 
@@ -33,6 +33,20 @@ function sendDeposit(uint256 paymentReference) payable {
 function() payable {
   BadDepositReceived(msg.sender, 0 , msg.value);
   msg.sender.transfer(msg.value);
+}
+
+// Methods to change owner and wallet
+
+function transferOwnership(address newOwner) onlyOwner {
+  if (newOwner != address(0)) {
+    owner = newOwner;
+  }
+}
+
+function changeWallet(address newWallet) onlyOwner {
+  if (newWallet != address(0)) {
+    hotWallet = newWallet;
+  }
 }
 
 /// @notice This method can be used by the controller to extract mistakenly
