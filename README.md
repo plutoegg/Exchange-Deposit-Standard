@@ -2,6 +2,12 @@
 
 This standard if widely adopted will simplify the burden on exchanges and other entities such as merchants, who accept large numbers of deposits and payments on Ethereum. The solution being proposed is a deposit contract to be widely used, which requires the addition of a payment reference field to transactions.
 
+### Components of the standard
+
+A payable function `sendDeposit(string)` with signature `0xd565365b`
+
+The exact implementation of all other aspects of the contract, such as the events and token fetching functions are not part of the standard.
+
 ### The main goals of developing this standard are:
   1. Reduce burden of parsing the blockchain for all incoming transactions, and the need to issue different addresses for each customer.
   2. Ensure events are issued for all deposits, and ensure handling is the same whether deposits are sent from other contracts, including multi-signature wallet contracts, or from regular addresses.
@@ -15,7 +21,7 @@ This standard if widely adopted will simplify the burden on exchanges and other 
 
   In a similar way to the functionality of ENS, a registry contract could allow entities to register their deposit addresses. Wallet applications would ensure that for any address listed in that registry contract the end user would be asked to add an extra payment reference field in order to send a deposit to that address.
 
-### Basic deposit contract
+### Example deposit contract using the standard
 
   A first deposit contract is proposed with the following features:
   1. Deposits are received via the `sendDeposit(string paymentReference) payable` function.
