@@ -18,8 +18,8 @@ This standard if widely adopted will simplify the burden on exchanges and other 
 ### Basic deposit contract
 
   A first deposit contract is proposed with the following features:
-  1. Deposits are received via the `sendDeposit(uint256 paymentReference) payable` function.
-  1. Only deposits with a valid supplied uint payment reference are accepted, and issue a `DepositReceived` event.
+  1. Deposits are received via the `sendDeposit(string paymentReference) payable` function.
+  1. Only deposits with a valid supplied string payment reference are accepted, and issue a `DepositReceived` event. In this example the required payment reference is of the form `bitfinex1234`, but this can be chosen by the merchant.
   2. All other deposits, either calling the function without a valid payment reference or via the fallback function, return the sent ether to the sender, and issue a `BadDepositReceived` event.
   3. The contract also includes a `claimTokens` function allowing any ERC20 tokens sent to the contract to be retrieved by the owner and manually returned to the sender. It would be preferable to extend the contract to accept deposits of tokens, using for example the ERC223 standard proposed.
 
