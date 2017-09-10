@@ -1,8 +1,10 @@
 pragma solidity ^0.4.8;
 
 import "./ERC20Interface.sol";
+import "./strings.sol"; // https://github.com/Arachnid/solidity-stringutils
 
 contract DepositSink {
+    using strings for *;
 
 address owner;
 address hotWallet;
@@ -19,20 +21,24 @@ function DepositSink(address _hotWallet) {
   hotWallet = _hotWallet;
 }
 
-function sendDeposit(uint256 paymentReference) payable {
-  // Check to match whichever payment reference schema is used (default > 0)
-  if (paymentReference > 0) {
+function sendDeposit(string paymentReference) payable returns (bool){
+  // Check to match whichever payment reference schema is used
+  // for example here string must begin with 'bitfinex' and be 12 chars long
+  var s = paymentReference.toSlice();
+  if (s.startsWith("bitfinex".toSlice()) && s.len() == 12) {
     DepositReceived(msg.sender, paymentReference, msg.value);
     hotWallet.transfer(msg.value);
+    return true;
   }
   else {
     BadDepositReceived(msg.sender, paymentReference, msg.value);
     msg.sender.transfer(msg.value);
+    return false;
   }
 }
 
 function() payable {
-  BadDepositReceived(msg.sender, 0 , msg.value);
+  BadDepositReceived(msg.sender, "" , msg.value);
   msg.sender.transfer(msg.value);
 }
 
@@ -67,8 +73,8 @@ function claimTokens(address _token) public onlyOwner {
     ClaimedTokens(_token, owner, balance);
 }
 
-event DepositReceived(address fromAddress, uint256 paymentReference, uint256 amount);
-event BadDepositReceived(address fromAddress, uint256 paymentReference, uint256 amount);
+event DepositReceived(address fromAddress, string paymentReference, uint256 amount);
+event BadDepositReceived(address fromAddress, string paymentReference, uint256 amount);
 event ClaimedTokens(address token, address owner, uint256 balance);
 
 }
